@@ -22,7 +22,7 @@ const defalutOptions = {
 
 const runAll = async <T, D>(
     array: T[],
-    iteratorFn: (item: T, index: number, array: T[]) => () => Promise<D> | void,
+    iteratorFn: (item: T, index: number, groupIndex: number, array: T[][]) => () => Promise<D> | void,
     options: IOptions = defalutOptions
 ) => {
     const group = splitArray<T>(array, options.groupSize);
@@ -30,7 +30,13 @@ const runAll = async <T, D>(
 
     for (let groupIndex = 0; groupIndex < group.length; groupIndex++) {
         const groupItem = group[groupIndex];
-        const promises = groupItem.map(iteratorFn);
+        const promises = [];
+    
+        for (let itemIndex = 0; itemIndex < groupItem.length; itemIndex++) {
+            const item = groupItem[itemIndex];
+            const promise = iteratorFn(item, itemIndex, groupIndex, group);
+            promises.push(promise);
+        }
 
         let itemResult: PromiseSettledResult<void | Awaited<D>>[] | (void | Awaited<D>)[] = [];
         if (options.requireSuccess) {
