@@ -15,7 +15,7 @@
 #### params
 
 1. array: input array
-2. iteratorFn: deal with the logic of each item, can receive `currentItem`, `currentIndex`, `all`
+2. iteratorFn: deal with the logic of each item, can receive `currentItem`, `currentIndex`, `groupIndex`, `allGroup`
 3. options: 
 
     - groupSize: split array size
